@@ -61,5 +61,6 @@
     <Build Include="Player.sql" />
     <Build Include="Alias.sql" />
     <Build Include="Media.sql" />
+    <Build Include="IsValidUrl.sql" />
   </ItemGroup>
 </Project>

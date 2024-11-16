@@ -6,7 +6,7 @@
 		Constraint FK_Media_Player Foreign Key
 			References [dbo].[Player](UnixID),
 	"Url" varchar(2048) not null
-		Constraint CK_Url Check ("Url" = null or "Url" like Trim("Url"))
+		Constraint CK_Url Check ("Url" = null or ("Url" like Trim("Url") and [dbo].[IsValidUrl]("Url") = 1))
 )
 GO
 

@@ -16,8 +16,6 @@
 	CharacterTwo int
 		constraint FK_Match_CharacterTwo REFERENCES "Character"(CharacterID) not null,
 	VerifiedMatchURL varchar(100) null,
-		--needs regex constraint
-		--needs authorization
 		Constraint CK_Match_VerifiedURL Check (VerifiedMatchURL = null or VerifiedMatchURL like Trim(VerifiedMatchURL)),
 	MatchType int
 		constraint FK_Match_MatchType REFERENCES MatchType(MatchTypeID) not null,

@@ -45,3 +45,6 @@ Stored Procedure that only shows verified matches
 
 Player Table:
 Stored Procedure that only shows verified player information.
+
+SQL Function:
+Formula for ranking score.

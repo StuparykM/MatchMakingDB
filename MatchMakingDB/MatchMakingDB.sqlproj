@@ -66,5 +66,6 @@
     <Build Include="Game.sql" />
     <Build Include="Character.sql" />
     <Build Include="Match.sql" />
+    <Build Include="CalcRankScore.sql" />
   </ItemGroup>
 </Project>

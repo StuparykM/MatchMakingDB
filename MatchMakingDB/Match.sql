@@ -47,3 +47,24 @@ GO
 create nonclustered index IX_Match_PlayerAdmin
 	ON "Match" ("Admin")
 GO
+
+create trigger TR_PreventDuplicatePlayer
+	on "Match"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(PlayerOne) or Update(PlayerTwo))
+				Begin
+					if exists (
+						select * 
+						from inserted
+						where inserted.PlayerOne = inserted.PlayerTwo
+					)
+					Begin
+						rollback transaction
+							raiserror('Player One and Player Two cannot be the same player.',16,1)
+					End
+				End
+		End
+	Return
+GO

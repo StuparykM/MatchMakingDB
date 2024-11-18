@@ -22,7 +22,6 @@ All Tables need Triggers For Table Modification For Log Tables.
 
 Match Table:
 Trigger to update Player wins and losses and ranking score when new match concludes.
-Trigger to prevent Player One and Player two from being the same.
 
 
 

@@ -61,6 +61,10 @@
     <Build Include="Player.sql" />
     <Build Include="Alias.sql" />
     <Build Include="Media.sql" />
-    <Build Include="IsValidUrl.sql" />
+    <Build Include="Genre.sql" />
+    <Build Include="MatchType.sql" />
+    <Build Include="Game.sql" />
+    <Build Include="Character.sql" />
+    <Build Include="Match.sql" />
   </ItemGroup>
 </Project>

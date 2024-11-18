@@ -5,9 +5,9 @@
 		Constraint FK_Alias_Player Foreign Key
 			References [dbo].[Player](UnixID),
 	"Name" varchar(50) not null
-		Constraint CK_Name Check (Trim("Name") != '' and "Name" like Trim("Name")),
+		Constraint CK_Alias_Name Check (Trim("Name") != '' and "Name" like Trim("Name")),
 	"Primary" bit not null
-		Constraint DF_Primary Default 0
+		Constraint DF_Alias_Primary Default 0
 )
 GO
 

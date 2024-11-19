@@ -9,8 +9,8 @@ Originally intended to be interfaced with a Discord bot but left open to interfa
 Tables:
 Log Tables That Log DB Changes.
 Each log table will include a duplicate of every column it references, all columns are nullable. null means no change
-each log table will also include AdminChange
-each log table will also include ChangeDateTime
+each log table will also include AdminChange not null
+each log table will also include ChangeDateTime not null
 
 
 DB Triggers:

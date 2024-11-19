@@ -12,11 +12,11 @@ AS
 	declare @rankMult decimal(1,1)
 	if (@win = 1)
 		Begin
-		set @rankMult = @opponentScore / @userScore
+		set @rankMult = Cast(@opponentScore as decimal(1,1)) / Cast(@userScore as decimal(1,1))
 		End
 	else
 		Begin
-		set @rankMult = @userScore / @opponentScore
+		set @rankMult = Cast(@userScore as decimal(1,1)) / Cast(@opponentScore as decimal(1,1))
 		End
 	return Cast(@base * @rankMult * @mult as int)
 	End

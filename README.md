@@ -8,17 +8,10 @@ Originally intended to be interfaced with a Discord bot but left open to interfa
 
 Tables:
 Log Tables That Log DB Changes.
-	Log entity tables
-		Player
-		Match
-		Genre
-		MatchType
-		Alias
-		Media
-		Character
-		Game
+Each log table will include a duplicate of every column it references, all columns are nullable. null means no change
+each log table will also include AdminChange
+each log table will also include ChangeDateTime
 
-Test Temporal table for logs
 
 DB Triggers:
 All Tables need Triggers For Table Modification For Log Tables.

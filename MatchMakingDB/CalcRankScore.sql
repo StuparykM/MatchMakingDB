@@ -10,13 +10,14 @@ AS
 	Begin
 	declare @base decimal(1,1) = 50
 	declare @rankMult decimal(1,1)
+	declare @minRank int = 1000
 	if (@win = 1)
 		Begin
-		set @rankMult = Cast(Max(@opponentScore, 1) as decimal(1, 1)) / Cast(Max(@userScore, 1) as decimal(1, 1))
+		set @rankMult = Cast(Max(@opponentScore, @minRank) as decimal(1, 1)) / Cast(Max(@userScore, @minRank) as decimal(1, 1))
 		End
 	else
 		Begin
-		set @rankMult = Cast(Max(@userScore, 1) as decimal(1, 1)) / Cast(Max(@opponentScore, 1) as decimal(1, 1)) * -1.0
+		set @rankMult = Cast(Max(@userScore, @minRank) as decimal(1, 1)) / Cast(Max(@opponentScore, @minRank) as decimal(1, 1)) * -1.0
 		End
 	return Cast(@base * @rankMult * @mult as int)
 	End

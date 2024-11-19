@@ -4,6 +4,8 @@ Originally intended to be interfaced with a Discord bot but left open to interfa
 
 ## TO-DO:
 
+
+
 Tables:
 Log Tables That Log DB Changes.
 	Log entity tables
@@ -15,6 +17,8 @@ Log Tables That Log DB Changes.
 		Media
 		Character
 		Game
+
+Test Temporal table for logs
 
 DB Triggers:
 All Tables need Triggers For Table Modification For Log Tables.

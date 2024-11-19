@@ -16,7 +16,7 @@ AS
 		End
 	else
 		Begin
-		set @rankMult = Cast(@userScore as decimal(1,1)) / Cast(@opponentScore as decimal(1,1))
+		set @rankMult = Cast(@userScore as decimal(1,1)) / Cast(@opponentScore as decimal(1,1)) * -1.0
 		End
 	return Cast(@base * @rankMult * @mult as int)
 	End

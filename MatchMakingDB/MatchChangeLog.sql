@@ -3,7 +3,7 @@
 	ID int identity (1,1) not null
 		constraint PK_MatchChangeLog primary key clustered,
 	MatchID int
-		constraint FK_MatchChangeLog_MatchID references "Match"(MatchID) null,
+		constraint FK_MatchChangeLog_MatchID references "Match"(MatchID) not null,
 	PlayerOne int
 		constraint FK_MatchChangeLog_PlayerOne REFERENCES Player(UnixID) null,
 	PlayerTwo int
@@ -51,7 +51,7 @@ create nonclustered index IX_MatchChangeLog_PlayerAdmin
 	ON "MatchChangeLog" ("Admin")
 GO
 
-create trigger TR_PreventDuplicatePlayerMCL
+create trigger TR_PreventDuplicatePlayer_MatchChangeLog
 	on "MatchChangeLog"
 	For insert, update
 	As

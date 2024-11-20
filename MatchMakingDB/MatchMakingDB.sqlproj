@@ -72,5 +72,8 @@
     <Build Include="GameChangeLog.sql" />
     <Build Include="GenreChangeLog.sql" />
     <Build Include="MatchChangeLog.sql" />
+    <Build Include="MatchTypeChangeLog.sql" />
+    <Build Include="MediaChangeLog.sql" />
+    <Build Include="PlayerChangeLog.sql" />
   </ItemGroup>
 </Project>

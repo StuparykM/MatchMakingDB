@@ -4,7 +4,6 @@
 		constraint PK_Match PRIMARY KEY CLUSTERED not null,
 	PlayerOne int
 		constraint FK_Match_PlayerOne REFERENCES Player(UnixID) not null,
-		--constraint CK_PlayerOne_Duplicate CHECK (PlayerOne NOT LIKE PlayerTwo) has to be done in a function cannot do it in creation 
 	PlayerTwo int
 		constraint FK_Match_PlayerTwo REFERENCES Player(UnixID) not null,
 	Winner int

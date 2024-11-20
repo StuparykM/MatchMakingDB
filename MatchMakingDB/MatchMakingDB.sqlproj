@@ -67,5 +67,10 @@
     <Build Include="Character.sql" />
     <Build Include="Match.sql" />
     <Build Include="CalcRankScore.sql" />
+    <Build Include="AliasChangeLog.sql" />
+    <Build Include="CharacterChangeLog.sql" />
+    <Build Include="GameChangeLog.sql" />
+    <Build Include="GenreChangeLog.sql" />
+    <Build Include="MatchChangeLog.sql" />
   </ItemGroup>
 </Project>

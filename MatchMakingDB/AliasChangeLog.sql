@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[AliasChangeLog]
 (
-	Id INT identity(1,1) NOT NULL PRIMARY KEY clustered,
+	ID INT identity(1,1) NOT NULL PRIMARY KEY clustered,
 	AliasID int not null
 		constraint FK_AliasChangeLog_AliasID references Alias(ID),
 	"Name" varchar(50) null
@@ -12,4 +12,25 @@
 	"Admin" int
 		constraint FK_AliasChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
 )
+GO
+
+create trigger TR_AliasChangeLog_PreventPKUpdate
+	on "AliaschangeLog"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from AliasChangeLog
+						where AliasChangeLog.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Log ID',16,1)
+					End
+				End
+		End
+	Return
 GO

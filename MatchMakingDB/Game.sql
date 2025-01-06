@@ -14,3 +14,24 @@ GO
 create nonclustered index IX_Game_GenreID
 	ON Game (GenreID)
 GO
+
+create trigger TR_Game_PreventPKUpdate
+	on "Game"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(GameID))
+				Begin
+					if exists (
+						select * 
+						from "Game"
+						where Game.GameID = inserted.GameID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Game ID',16,1)
+					End
+				End
+		End
+	Return
+GO

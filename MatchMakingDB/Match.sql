@@ -67,3 +67,24 @@ create trigger TR_PreventDuplicatePlayer
 		End
 	Return
 GO
+
+create trigger TR_Match_PreventPKUpdate
+	on "Match"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(MatchID))
+				Begin
+					if exists (
+						select * 
+						from "Match"
+						where Match.MatchID = inserted.MatchID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update MatchID of a played match',16,1)
+					End
+				End
+		End
+	Return
+GO

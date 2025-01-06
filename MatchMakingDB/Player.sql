@@ -7,6 +7,8 @@
 	LastName varchar(50) null
 		Constraint CK_Player_LastName Check (LastName = null or LastName like Trim(LastName)),
 	FullName As FirstName + ' ' + LastName,
+	Region varchar(2) not null
+		Constraint CK_Player_Region Check (Region LIKE '[A-Z][A-Z]'),
 	Wins int not null
 		Constraint DF_Player_Wins Default 0
 		Constraint CK_Player_Wins Check (Wins >= 0),
@@ -22,4 +24,25 @@
 	"Admin" bit not null
 		Constraint DF_Player_Admin Default 0
 )
+GO
+
+create trigger TR_Player_PreventPKUpdate
+	on "Player"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(UnixID))
+				Begin
+					if exists (
+						select * 
+						from Player
+						where Player.UnixID = inserted.UnixID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update UnixID of a player',16,1)
+					End
+				End
+		End
+	Return
 GO

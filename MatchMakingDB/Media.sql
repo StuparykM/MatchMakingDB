@@ -13,3 +13,24 @@ GO
 Create Nonclustered Index IX_Media_PlayerUnixID
 	On [dbo].[Media](PlayerUnixID)
 GO
+
+create trigger TR_Media_PreventPKUpdate
+	on "Media"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from "Media"
+						where Media.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Media ID',16,1)
+					End
+				End
+		End
+	Return
+GO

@@ -11,3 +11,24 @@
 	"Admin" int
 		constraint FK_GenreChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
 )
+GO
+create trigger TR_GenreChangeLog_PreventPKUpdate
+	on "GenreChangeLog"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from "GenreChangeLog"
+						where GenreChangeLog.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Log ID',16,1)
+					End
+				End
+		End
+	Return
+GO

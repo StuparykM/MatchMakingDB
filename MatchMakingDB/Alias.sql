@@ -35,3 +35,24 @@ Create Trigger TR_Max_One_Primary_Alias
 		End
 	Return
 GO
+
+create trigger TR_Alias_PreventPKUpdate
+	on "Alias"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from Alias
+						where Alias.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Alias ID of a player',16,1)
+					End
+				End
+		End
+	Return
+GO

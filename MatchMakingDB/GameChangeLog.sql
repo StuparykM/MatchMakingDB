@@ -23,3 +23,24 @@ GO
 create nonclustered index IX_GameChangeLog_Admin
 	ON "GameChangeLog" ("Admin")
 GO
+
+create trigger TR_GameChangeLog_PreventPKUpdate
+	on "GameChangeLog"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from "GameChangeLog"
+						where GameChangeLog.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Log ID',16,1)
+					End
+				End
+		End
+	Return
+GO

@@ -71,3 +71,24 @@ create trigger TR_PreventDuplicatePlayer_MatchChangeLog
 		End
 	Return
 GO
+
+create trigger TR_MatchChangeLog_PreventPKUpdate
+	on "MatchChangeLog"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from "MatchChangeLog"
+						where MatchChangeLog.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Log ID',16,1)
+					End
+				End
+		End
+	Return
+GO

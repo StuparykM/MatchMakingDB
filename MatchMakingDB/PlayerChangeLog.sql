@@ -29,3 +29,25 @@
 		constraint FK_PlayerChangeLog_AdminChange REFERENCES Player(UnixID) not null
 )
 GO
+
+
+create trigger TR_PlayerChangeLog_PreventPKUpdate
+	on "PlayerChangeLog"
+	For insert, update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+				Begin
+					if exists (
+						select * 
+						from "PlayerChangeLog"
+						where PlayerChangeLog.ID = inserted.ID
+					)
+					Begin
+						rollback transaction
+							raiserror('Cannot change or update Log ID',16,1)
+					End
+				End
+		End
+	Return
+GO

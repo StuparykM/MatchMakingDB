@@ -1,17 +1,26 @@
-﻿CREATE TABLE [dbo].[AliasChangeLog]
-(
-	ID INT identity(1,1) NOT NULL PRIMARY KEY clustered,
+Create Table [dbo].[AliasChangeLog] (
+	ID int identity(1,1) not null
+		Constraint PK_AliasChangeLog Primary Key Clustered,
 	AliasID int not null
-		constraint FK_AliasChangeLog_AliasID references Alias(ID),
-	"Name" varchar(50) null
-		Constraint CK_AliasChangeLog_Name Check ("Name" like Trim("Name")),
-	"Primary" bit null
-		Constraint DF_AliasChangeLog_Primary Default 0,
-	ChangeDate datetime not null
-		constraint CK_AliasChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_AliasChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
+		Constraint FK_AliasChangeLog_Alias Foreign Key
+			References Alias(ID),
+	"Name" varchar(50) null,
+	"Primary" bit null,
+	ChangeDate DateTime not null
+		Constraint CK_AliasChangeLog_ChangeDate Check (ChangeDate <= getdate()),
+	"Admin" int not null
+		Constraint FK_AliasChangeLog_PlayerAdmin Foreign Key
+			References Player(UnixID)
 )
+GO
+
+
+Create Nonclustered Index IX_AliasChangeLog_AliasID
+	On AliasChangeLog(AliasID)
+GO
+
+Create Nonclustered Index IX_AliasChangeLog_Admin
+	On AliasChangeLog("Admin")
 GO
 
 create trigger TR_AliasChangeLog_PreventPKUpdate

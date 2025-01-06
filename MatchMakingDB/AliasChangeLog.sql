@@ -1,6 +1,6 @@
-﻿CREATE TABLE [dbo].[AliasChangeLog]
-(
-	Id INT identity(1,1) NOT NULL PRIMARY KEY clustered,
+Create Table [dbo].[AliasChangeLog] (
+	ID int identity(1,1) not null
+		Constraint PK_AliasChangeLog Primary Key Clustered,
 	AliasID int not null
 		Constraint FK_AliasChangeLog_Alias Foreign Key
 			References Alias(ID),
@@ -12,4 +12,27 @@
 		Constraint FK_AliasChangeLog_PlayerAdmin Foreign Key
 			References Player(UnixID)
 )
+GO
+
+
+Create Nonclustered Index IX_AliasChangeLog_AliasID
+	On AliasChangeLog(AliasID)
+GO
+
+Create Nonclustered Index IX_AliasChangeLog_Admin
+	On AliasChangeLog("Admin")
+GO
+
+create trigger TR_AliasChangeLog_PreventPKUpdate
+	on "AliaschangeLog"
+	For update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+					Begin
+						rollback transaction
+							raiserror('Cannot change Log ID',16,1)
+					End
+				End
+	Return
 GO

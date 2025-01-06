@@ -12,21 +12,14 @@ GO
 
 create trigger TR_MatchType_PreventPKUpdate
 	on "MatchType"
-	For insert, update
+	For update
 	As
 		Begin
 			if @@ROWCOUNT > 0 and (Update(MatchTypeID))
-				Begin
-					if exists (
-						select * 
-						from "MatchType"
-						where MatchType.MatchTypeID = inserted.MatchTypeID
-					)
 					Begin
 						rollback transaction
 							raiserror('Cannot change or update MatchType ID',16,1)
 					End
 				End
-		End
 	Return
 GO

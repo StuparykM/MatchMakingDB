@@ -28,21 +28,14 @@ GO
 
 create trigger TR_Player_PreventPKUpdate
 	on "Player"
-	For insert, update
+	For update
 	As
 		Begin
 			if @@ROWCOUNT > 0 and (Update(UnixID))
-				Begin
-					if exists (
-						select * 
-						from Player
-						where Player.UnixID = inserted.UnixID
-					)
 					Begin
 						rollback transaction
 							raiserror('Cannot change or update UnixID of a player',16,1)
 					End
 				End
-		End
 	Return
 GO

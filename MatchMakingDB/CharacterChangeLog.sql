@@ -17,3 +17,17 @@ Create Nonclustered Index IX_CharacterChangeLog_CharacterID
 	On CharacterChangeLog(CharacterID)
 GO
 
+create trigger TR_CharacterChangeLog_PreventPKUpdate
+	on "CharacterChangeLog"
+	For update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+					Begin
+						rollback transaction
+							raiserror('Cannot change Log ID',16,1)
+					End
+				End
+	Return
+GO
+

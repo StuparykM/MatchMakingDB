@@ -47,15 +47,17 @@ begin
     begin
         begin try
             merge into AliasChangeLog as target
-            using (select AliasID, "Name", "Primary", GetDate() as ChangeDate, "Admin"
-                   from inserted) AS Source
+            using (select inserted.AliasID, a."Name", a."Primary", GetDate() as ChangeDate, "Admin"
+                   from Alias as a
+				   inner join inserted
+				   on Alias.AliasID = inserted.AliasID) AS Source
             on target.AliasID = Source.AliasID
             when matched then
                 update set
-                    "Name" = Source."Name",
-                    "Primary" = Source."Primary",
-                    ChangeDate = Source.ChangeDate,
-                    "Admin" = Source."Admin"
+                    target."Name" = Source."Name",
+                    target."Primary" = Source."Primary",
+                    target.ChangeDate = Source.ChangeDate,
+                    target."Admin" = Source."Admin"
             when not matched by target then
                 insert (AliasID, "Name", "Primary", ChangeDate, "Admin")
                 values (Source.AliasID, Source."Name", Source."Primary", Source.ChangeDate, Source."Admin");

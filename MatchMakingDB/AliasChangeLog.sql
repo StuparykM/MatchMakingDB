@@ -47,7 +47,7 @@ begin
     begin
         begin try
             merge into AliasChangeLog as target
-            using (select inserted.AliasID, a."Name", a."Primary", GetDate() as ChangeDate, "Admin"
+            using (select inserted.AliasID, a."Name", a."Primary"
                    from Alias as a
 				   inner join inserted
 				   on Alias.AliasID = inserted.AliasID) AS Source
@@ -56,11 +56,11 @@ begin
                 update set
                     target."Name" = Source."Name",
                     target."Primary" = Source."Primary",
-                    target.ChangeDate = Source.ChangeDate,
-                    target."Admin" = Source."Admin"
+                    target.ChangeDate = GetDate(),
+                    target."Admin" = "Admin"
             when not matched by target then
                 insert (AliasID, "Name", "Primary", ChangeDate, "Admin")
-                values (Source.AliasID, Source."Name", Source."Primary", Source.ChangeDate, Source."Admin");
+                values (Source.AliasID, Source."Name", Source."Primary");
         end try
         begin catch
             ROLLBACK TRANSACTION;

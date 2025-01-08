@@ -10,9 +10,6 @@
 GO
 
 
-create nonclustered index IX_Character_GameID
-	ON "Character" (GameID)
-GO
 
 Create Nonclustered Index IX_Character_GameID
 	On "Character"(GameID)

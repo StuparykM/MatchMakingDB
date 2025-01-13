@@ -1,5 +1,5 @@
 ﻿Create Table [dbo].[Alias] (
-	ID int identity(1, 1) not null
+	AliasID int identity(1, 1) not null
 		Constraint PK_Alias Primary Key Clustered,
 	PlayerUnixID int not null
 		Constraint FK_Alias_Player Foreign Key
@@ -41,7 +41,7 @@ create trigger TR_Alias_PreventPKUpdate
 	For update
 	As
 		Begin
-			if @@ROWCOUNT > 0 and (Update(ID))
+			if @@ROWCOUNT > 0 and (Update(AliasID))
 					Begin
 						rollback transaction
 							raiserror('Cannot change or update Alias ID of a player',16,1)

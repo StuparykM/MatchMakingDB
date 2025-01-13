@@ -41,7 +41,7 @@ begin
     begin
         begin try
             merge into CharacterChangeLog as target
-            using (select inserted.CharacterID, c."CharacterName"
+            using (select c.CharacterID, c."CharacterName"
                    from "Character" as c
 				   inner join inserted
 				   on c.CharacterID = inserted.CharacterID) AS Source
@@ -52,7 +52,7 @@ begin
                     target.ChangeDate = GetDate(),
                     target."Admin" = "Admin"
             when not matched by target then
-                insert (CharacterID, "CharacterName", ChangeDate, "Admin")
+                insert (CharacterID, "CharacterName")
                 values (Source.CharacterID, Source."CharacterName");
         end try
         begin catch

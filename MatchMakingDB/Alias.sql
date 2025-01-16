@@ -50,4 +50,30 @@ create trigger TR_Alias_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_AliashChangeLog_Update
+on Alias
+for update
+as
+begin
+	if update("Name") or update("Primary")
+	begin
+	insert into AliasChangeLog(AliasID, OldName, "NewName", "Primary", ChangeDate, "Admin")
+	select deleted.AliasID,
+		   deleted."Name" as OldName,
+		   inserted."Name" as "NewName",
+		   inserted."Primary",
+		   GetDate() as ChangeDate,
+		   inserted.PlayerUnixID as "Admin"
+		   from inserted
+		   inner join deleted
+		   on inserted.AliasID = deleted.AliasID
+		if @@ERROR <> 0 
+			begin
+			rollback transaction
+			raiserror ('Update failed', 16,1)
+			end
+		end
+	return
+end
+
  

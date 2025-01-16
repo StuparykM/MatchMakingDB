@@ -28,3 +28,28 @@ create trigger TR_Character_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_CharacterChangeLog_Update
+on "Character"
+for update
+as 
+	begin
+	if @@ROWCOUNT > 0 and Update(CharacterName)
+		begin
+			insert into CharacterChangeLog (CharacterID, NewCharacterName, OldCharacterName, ChangeDate, "Admin")
+			select deleted.CharacterID,
+				   deleted.CharacterName as OldCharacterName,
+				   inserted.CharacterName as NewCharacterName,
+				   GetDate() as ChangeDate
+				   --inserted.UnixID as "Admin"
+				from inserted
+				inner join deleted
+				on inserted.CharacterID = deleted.CharacterID
+				if @@ERROR <> 0 
+				begin
+				rollback transaction
+				raiserror('Update Failed', 16,1)
+				end
+			end
+return
+end

@@ -4,12 +4,16 @@
 		constraint PK_GameChangeLog primary key clustered,
 	GameID int
 		constraint FK_GameChangeLog_GameID references Game(GameID),
-	"Name" varchar(50) null
-		Constraint CK_GameChangeLog_Name Check ("Name" like Trim("Name")),
+	"NewName" varchar(50) null
+		Constraint CK_GameChangeLog_NewName Check ("NewName" like Trim("NewName")),
+	OldName varchar(50) null,
+		Constraint CK_GameChangeLog_OldName Check (OldName like Trim(OldName)),
 	GenreID int
 		constraint FK_GameChangeLog_Genre REFERENCES Genre(GenreID) null,
-	"Version" varchar(50)
-		constraint DF_GameChangeLog_Version DEFAULT 1.0 null,
+	OldVersion varchar(50)
+		constraint DF_GameChangeLog_OldVersion DEFAULT 1.0 null,
+	NewVersion varchar(50)
+		constraint DF_GameChangeLog_NewVersion DEFAULT 1.0 null,
 	ChangeDate datetime not null
 		constraint CK_GameChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int

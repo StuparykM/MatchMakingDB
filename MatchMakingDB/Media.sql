@@ -27,3 +27,30 @@ create trigger TR_Media_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_MediaChangeLog_Update
+on Media
+for update
+as
+	begin
+		if @@ROWCOUNT > 0 and update("Url")
+		insert into MediaChangeLog(MediaID, PlayerUnixID, NewUrl, OldUrl, ChangeDate, "Admin")
+		select deleted.ID as MediaID,
+			   deleted.PlayerUnixID,
+			   deleted."Url" as OldUrl,
+			   inserted."Url" as NewUrl,
+			   GetDate() as ChangeDate
+			   --inserted."Admin"
+			   from deleted
+			   inner join inserted
+			   on deleted.ID = inserted.ID
+			if @@ERROR <> 0 
+				begin
+					rollback transaction
+					raiserror('Update Failed',16,1)
+				end
+			end
+		return
+	GO
+		
+	

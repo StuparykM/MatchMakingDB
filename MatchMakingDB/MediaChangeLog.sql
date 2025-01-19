@@ -7,8 +7,10 @@
 	PlayerUnixID int null
 		Constraint FK_MediaChangeLog_Player Foreign Key
 			References [dbo].[Player](UnixID),
-	"Url" varchar(2048) null
-		Constraint CK_MediaChangeLog_Url Check ("Url" like Trim("Url")),
+	NewUrl varchar(2048) null
+		Constraint CK_MediaChangeLog_NewUrl Check (NewUrl like Trim(NewUrl)),
+	OldUrl varchar(2048) null
+		Constraint CK_MediaChangeLog_OldUrl Check (OldUrl like Trim(OldUrl)),
 	ChangeDate datetime not null
 		constraint CK_MediaChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int

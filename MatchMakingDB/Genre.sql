@@ -20,3 +20,29 @@ create trigger TR_Genre_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_GenreChangeLog_Update
+on Genre
+for update
+as 
+begin
+	if @@ROWCOUNT > 0 and update(Description)
+		begin
+			insert into GenreChangeLog(GenreID, OldDescription, NewDescription, ChangeDate, "Admin")
+			select deleted.GenreID,
+				   deleted."Description" as OldDescription,
+				   inserted."Description" as NewDescription,
+				   GetDate() as ChangeDate
+				   --inserted."Admin"
+				   from deleted
+				   inner join inserted
+				   on deleted.GenreID = inserted.GenreID
+				if @@ERROR <> 0 
+					begin
+						rollback transaction
+						raiserror ('Update Failed', 16,1)
+					end
+				end
+			return
+		end
+	GO

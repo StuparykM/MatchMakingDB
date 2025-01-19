@@ -28,3 +28,30 @@ create trigger TR_Game_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_GameChangeLog_Update
+on Game
+for update
+as
+begin
+	if update("Name") or update("Version")
+		begin
+			insert into GameChangeLog (GameID, "NewName", OldName, NewVersion, OldVersion, ChangeDate, "Admin")
+			select deleted.GameID,
+				   deleted."Name" as OldName,
+				   inserted."Name" as "NewName",
+				   inserted."Version" as NewVersion,
+				   deleted."Version" as OldVersion,
+				   GetDate() as ChangeDate
+				   from inserted
+				   inner join deleted
+				   on inserted.GameID = deleted.GameID
+				if @@ERROR <> 0
+					begin
+						rollback transaction
+						raiserror ('Update Failed', 16,1)
+					end
+				end
+		return
+end
+GO

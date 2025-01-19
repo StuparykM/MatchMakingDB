@@ -23,3 +23,29 @@ create trigger TR_MatchType_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_MatchTypeChangeLog_Update
+on MatchType
+for Update
+as
+	begin
+		if update("Type") or update(Multiplier)
+			insert into MatchTypeChangeLog(MatchTypeID, OldType, NewType, OldMultiplier, NewMultiplier, ChangeDate, "Admin")
+			select deleted.MatchTypeID,
+				   deleted."Type" as OldType,
+				   inserted."Type" as NewType,
+				   deleted.Multiplier as OldMultiplier,
+				   inserted.Multiplier as NewMultiplier,
+				   GetDate() as ChangeDate
+				   --inserted."Admin"
+				   from deleted
+				   inner join inserted
+				   on deleted.MatchTypeID = inserted.MatchTypeID
+				if @@ERROR <> 0 
+					begin
+						rollback transaction
+						raiserror ('Update Failed',16,1)
+					end
+				end
+			return
+	GO

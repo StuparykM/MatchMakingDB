@@ -4,8 +4,10 @@
 		constraint PK_GenreChangeLog PRIMARY KEY clustered,
 	GenreID int null
 		constraint FK_GenreChangeLog_GenreID references Genre(GenreID),
-	"Description" varchar(50) null
-		Constraint CK_GenreChangeLog_Description Check ("Description" like Trim("Description")),
+	NewDescription varchar(50) null
+		Constraint CK_GenreChangeLog_NewDescription Check (NewDescription like Trim(NewDescription)),
+	OldDescription varchar(50) null
+		Constraint CK_GenreChangeLog_OldDescription Check (OldDescription like Trim(OldDescription)),
 	ChangeDate datetime not null
 		constraint CK_GenreChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int

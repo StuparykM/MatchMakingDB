@@ -3,7 +3,7 @@
 		Constraint PK_Alias Primary Key Clustered,
 	PlayerUnixID int not null
 		Constraint FK_Alias_Player Foreign Key
-			References [dbo].[Player](UnixID),
+			References [dbo].[Player](PlayerUnixID),
 	"Name" varchar(50) not null
 		Constraint CK_Alias_Name Check (Trim("Name") != '' and "Name" like Trim("Name")),
 	"Primary" bit not null

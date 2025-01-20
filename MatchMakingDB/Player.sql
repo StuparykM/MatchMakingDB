@@ -1,5 +1,5 @@
 ﻿Create Table [dbo].[Player] (
-	UnixID int not null
+	PlayerUnixID int not null
 		Constraint PK_Player Primary Key Clustered
 		Constraint DF_Player_UnixID Default DateDiff(s, '1970-01-01 00:00:00', GetDate()),
 	FirstName varchar(50) null
@@ -31,7 +31,7 @@ create trigger TR_Player_PreventPKUpdate
 	For update
 	As
 		Begin
-			if @@ROWCOUNT > 0 and (Update(UnixID))
+			if @@ROWCOUNT > 0 and (Update(PlayerUnixID))
 					Begin
 						rollback transaction
 							raiserror('Cannot change or update UnixID of a player',16,1)

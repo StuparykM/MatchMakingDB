@@ -4,7 +4,7 @@
 		Constraint PK_Media Primary Key Clustered,
 	PlayerUnixID int not null
 		Constraint FK_Media_Player Foreign Key
-			References [dbo].[Player](UnixID),
+			References [dbo].[Player](PlayerUnixID),
 	"Url" varchar(2048) not null
 		Constraint CK_Media_Url Check (Trim("Url") != '' and "Url" like Trim("Url"))
 )
@@ -39,11 +39,14 @@ as
 			   deleted.PlayerUnixID,
 			   deleted."Url" as OldUrl,
 			   inserted."Url" as NewUrl,
-			   GetDate() as ChangeDate
-			   --inserted."Admin"
+			   GetDate() as ChangeDate,
+			   Player.PlayerUnixID as "Admin"
 			   from deleted
 			   inner join inserted
 			   on deleted.ID = inserted.ID
+			   left join Player
+			   on deleted.PlayerUnixID = Player.PlayerUnixID
+			   where Player."Admin" = 1
 			if @@ERROR <> 0 
 				begin
 					rollback transaction

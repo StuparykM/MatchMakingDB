@@ -5,13 +5,13 @@
 	MatchID int
 		constraint FK_MatchChangeLog_MatchID references "Match"(MatchID) not null,
 	NewPlayerOne int
-		constraint FK_MatchChangeLog_NewPlayerOne REFERENCES Player(UnixID) null,
+		constraint FK_MatchChangeLog_NewPlayerOne REFERENCES Player(PlayerUnixID) null,
 	OldPlayerOne int
-		constraint FK_MatchChangeLog_OldPlayerOne REFERENCES Player(UnixID) null,
+		constraint FK_MatchChangeLog_OldPlayerOne REFERENCES Player(PlayerUnixID) null,
 	NewPlayerTwo int
-		constraint FK_MatchChangeLog_NewPlayerTwo REFERENCES Player(UnixID) null,
+		constraint FK_MatchChangeLog_NewPlayerTwo REFERENCES Player(PlayerUnixID) null,
 	OldPlayerTwo int
-		constraint FK_MatchChangeLog_OldPlayerTwo REFERENCES Player(UnixID) null,
+		constraint FK_MatchChangeLog_OldPlayerTwo REFERENCES Player(PlayerUnixID) null,
 	NewWinner int
 		constraint CK_MatchChangeLog_NewWinner CHECK (NewWinner BETWEEN 1 AND 2) null,
 	OldWinner int
@@ -41,7 +41,7 @@
 	ChangeDate datetime not null
 		constraint CK_MatchChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int
-		constraint FK_MatchChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
+		constraint FK_MatchChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
 )
 GO
 

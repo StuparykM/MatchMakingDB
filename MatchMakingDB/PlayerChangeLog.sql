@@ -3,7 +3,7 @@
 	ID int identity(1,1)
 		constraint PK_PlayerChangeLog primary key clustered not null,
 	UnixID int
-		constraint FK_PlayerChangeLog_UnixID references Player(UnixID) not null,
+		constraint FK_PlayerChangeLog_UnixID references Player(PlayerUnixID) not null,
 		FirstName varchar(50) null
 		Constraint CK_PlayerChangeLog_FirstName Check (FirstName like Trim(FirstName)),
 	LastName varchar(50) null
@@ -26,7 +26,7 @@
 	ChangeDate datetime not null
 		constraint CK_PlayerChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"AdminChange" int
-		constraint FK_PlayerChangeLog_AdminChange REFERENCES Player(UnixID) not null
+		constraint FK_PlayerChangeLog_AdminChange REFERENCES Player(PlayerUnixID) not null
 )
 GO
 

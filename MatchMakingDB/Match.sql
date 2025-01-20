@@ -3,9 +3,9 @@
 	MatchID int identity(1,1)
 		constraint PK_Match PRIMARY KEY CLUSTERED not null,
 	PlayerOne int
-		constraint FK_Match_PlayerOne REFERENCES Player(UnixID) not null,
+		constraint FK_Match_PlayerOne REFERENCES Player(PlayerUnixID) not null,
 	PlayerTwo int
-		constraint FK_Match_PlayerTwo REFERENCES Player(UnixID) not null,
+		constraint FK_Match_PlayerTwo REFERENCES Player(PlayerUnixID) not null,
 	Winner int
 		constraint CK_Match_Winner CHECK (Winner BETWEEN 1 AND 2) not null,
 	GameID int
@@ -21,7 +21,7 @@
 	"Date" DateTime
 		constraint CK_Match_Date CHECK ("Date" <= GETDATE()) not null,
 	"Admin" int
-		constraint FK_Match_PlayerAdmin REFERENCES Player(UnixID) null
+		constraint FK_Match_PlayerAdmin REFERENCES Player(PlayerUnixID) null
 )
 GO
 
@@ -81,3 +81,41 @@ create trigger TR_Match_PreventPKUpdate
 				End
 	Return
 GO
+
+create trigger TR_MatchChangeLog_Update
+on "Match"
+for update
+as
+begin
+	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date") or update("Admin")
+	insert into MatchChangeLog(MatchID, GameID, NewPlayerOne, OldPlayerOne, NewPlayerTwo, OldPlayerTwo, NewWinner, OldWinner, NewCharacterOne, OldCharacterOne, NewCharacterTwo, OldCharacterTwo, NewVerifiedMatchURL, OldVerifiedMatchURL, NewDate, OldDate, ChangeDate, "Admin")
+	select deleted.MatchID,
+		   deleted.GameID,
+		   deleted.PlayerOne as OldPlayerOne,
+		   inserted.PlayerOne as NewPlayerOne,
+		   deleted.PlayerTwo as OldPlayerTwo,
+		   inserted.PlayerTwo as NewPlayerTwo,
+		   deleted.Winner as OldWinner,
+		   inserted.Winner as NewWinner,
+		   deleted.CharacterOne as OldCharacterOne,
+		   inserted.CharacterOne as NewCharacterOne,
+		   deleted.CharacterTwo as OldCharacterTwo,
+		   inserted.CharacterTwo as NewCharacterTwo,
+		   deleted.VerifiedMatchURL as OldVerifiedMatchURL,
+		   inserted.VerifiedMatchURL as NewVerifiedMatchURL,
+		   deleted."Date" as OldDate,
+		   inserted."Date" as NewDate,
+		   GetDate() as ChangeDate
+		   --inserted."Admin"
+		   from deleted
+		   inner join inserted
+		   on deleted.MatchID = inserted.MatchID
+		if @@ERROR <> 0 
+			begin
+				rollback transaction
+				raiserror ('Update Failed',16,1)
+			end
+		end
+	return
+go
+

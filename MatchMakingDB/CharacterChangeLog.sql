@@ -10,7 +10,7 @@
 		Constraint CK_CharacterChangeLog_ChangeDate Check (ChangeDate <= getdate()),
 	"Admin" int not null
 		Constraint FK_CharacterChangeLog_PlayerAdmin Foreign Key
-			References Player(UnixID)
+			References Player(PlayerUnixID)
 )
 GO
 

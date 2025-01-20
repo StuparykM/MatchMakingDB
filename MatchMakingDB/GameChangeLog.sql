@@ -17,7 +17,7 @@
 	ChangeDate datetime not null
 		constraint CK_GameChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int
-		constraint FK_GameChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
+		constraint FK_GameChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
 )
 GO
 

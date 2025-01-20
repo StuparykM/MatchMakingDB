@@ -11,7 +11,7 @@
 	ChangeDate datetime not null
 		constraint CK_GenreChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
 	"Admin" int
-		constraint FK_GenreChangeLog_PlayerAdmin REFERENCES Player(UnixID) not null
+		constraint FK_GenreChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
 )
 GO
 create trigger TR_GenreChangeLog_PreventPKUpdate

@@ -11,7 +11,7 @@ Create Table [dbo].[AliasChangeLog] (
 		Constraint CK_AliasChangeLog_ChangeDate Check (ChangeDate <= getdate()),
 	"Admin" int not null
 		Constraint FK_AliasChangeLog_PlayerAdmin Foreign Key
-			References Player(UnixID)
+			References Player(PlayerUnixID)
 )
 GO
 

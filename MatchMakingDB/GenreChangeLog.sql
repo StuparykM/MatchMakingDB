@@ -10,10 +10,20 @@
 		Constraint CK_GenreChangeLog_OldDescription Check (OldDescription like Trim(OldDescription)),
 	ChangeDate datetime not null
 		constraint CK_GenreChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_GenreChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
+	AdminID int not null
+		Constraint FK_GenreChangeLog_AdminID foreign key 
+			references Admin(AdminID)
 )
 GO
+
+create nonclustered index IX_GenreChangeLog_GenreID
+	on GenreChangeLog(GenreID)
+GO
+
+create nonclustered index IX_GenereChangeLog_AdminID
+	on GenreChangeLog(AdminID)
+GO
+
 create trigger TR_GenreChangeLog_PreventPKUpdate
 	on "GenreChangeLog"
 	For update

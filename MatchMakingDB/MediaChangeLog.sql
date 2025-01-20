@@ -13,13 +13,18 @@
 		Constraint CK_MediaChangeLog_OldUrl Check (OldUrl like Trim(OldUrl)),
 	ChangeDate datetime not null
 		constraint CK_MediaChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_MediaChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
+	AdminID int not null
+		Constraint FK_MediaChangeLog_AdminID foreign key 
+			references Admin(AdminID)
 )
 GO
 
 Create Nonclustered Index IX_MediaChangeLog_PlayerUnixID
 	On [dbo].[MediaChangeLog](PlayerUnixID)
+GO
+
+create nonclustered index IX_MediaChangeLog_AdminID
+	on MediaChangeLog(AdminID)
 GO
 
 create trigger TR_MediaChangeLog_PreventPKUpdate

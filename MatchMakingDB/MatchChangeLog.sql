@@ -40,8 +40,9 @@
 		constraint CK_MatchChangeLog_OldDate CHECK ("OldDate" <= GETDATE()) null,
 	ChangeDate datetime not null
 		constraint CK_MatchChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_MatchChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
+	AdminID int not null
+		Constraint FK_MatchChangeLog_AdminID foreign key 
+			references Admin(AdminID)
 )
 GO
 
@@ -79,7 +80,7 @@ create nonclustered index IX_MatchChangeLog_OldMatchType
 	ON "MatchChangeLog" (OldMatchType)
 GO
 create nonclustered index IX_MatchChangeLog_PlayerAdmin
-	ON "MatchChangeLog" ("Admin")
+	ON "MatchChangeLog" (AdminID)
 GO
 
 create trigger TR_PreventDuplicatePlayer_MatchChangeLog

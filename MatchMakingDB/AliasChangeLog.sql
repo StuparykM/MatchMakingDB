@@ -9,9 +9,9 @@ Create Table [dbo].[AliasChangeLog] (
 	"Primary" bit null,
 	ChangeDate DateTime not null
 		Constraint CK_AliasChangeLog_ChangeDate Check (ChangeDate <= getdate()),
-	"Admin" int not null
-		Constraint FK_AliasChangeLog_PlayerAdmin Foreign Key
-			References Player(PlayerUnixID)
+	AdminID int not null
+		Constraint FK_AliasChangeLog_Admin foreign key
+			references Admin(AdminID),
 )
 GO
 
@@ -21,7 +21,7 @@ Create Nonclustered Index IX_AliasChangeLog_AliasID
 GO
 
 Create Nonclustered Index IX_AliasChangeLog_Admin
-	On AliasChangeLog("Admin")
+	On AliasChangeLog(AdminID)
 GO
 
 create trigger TR_AliasChangeLog_PreventPKUpdate

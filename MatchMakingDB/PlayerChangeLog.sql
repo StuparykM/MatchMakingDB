@@ -21,12 +21,10 @@
 	CreationDate DateTime null
 		Constraint DF_PlayerChangeLog_CreationDate Default GetDate()
 		Constraint CK_PlayerChangeLog_CreationDate Check (CreationDate <= GetDate()),
-	"Admin" bit null
-		Constraint DF_PlayerChangeLog_Admin Default 0,
-	ChangeDate datetime not null
-		constraint CK_PlayerChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"AdminChange" int
-		constraint FK_PlayerChangeLog_AdminChange REFERENCES Player(PlayerUnixID) not null
+	ChangeDate datetime not null,
+	AdminChange int null
+		Constraint FK_PlayerChangeLog_AdminID foreign key 
+			references Admin(AdminID)
 )
 GO
 

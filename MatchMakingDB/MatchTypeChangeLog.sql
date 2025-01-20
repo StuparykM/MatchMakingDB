@@ -16,9 +16,18 @@
 		Constraint CK_MatchTypeChangeLog_OldMultiplier Check (OldMultiplier >= 0),
 	ChangeDate datetime not null
 		constraint CK_MatchTypeChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_MatchTypeChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
+	AdminID int not null
+		Constraint FK_MatchTypeChangeLog_AdminID foreign key 
+			references Admin(AdminID)
 )
+GO
+
+create nonclustered index IX_MatchTypeChangeLog_MatchTypeID
+	on MatchTypeChangeLog(MatchTypeID)
+GO
+
+create nonclustered index IX_MatchTypeChangeLog_AdminID
+	on MatchTypeChangeLog(AdminID)
 GO
 
 create trigger TR_MatchTypeChangeLog_PreventPKUpdate

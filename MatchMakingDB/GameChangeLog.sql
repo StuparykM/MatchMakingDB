@@ -16,8 +16,9 @@
 		constraint DF_GameChangeLog_NewVersion DEFAULT 1.0 null,
 	ChangeDate datetime not null
 		constraint CK_GameChangeLog_ChangeDate check (ChangeDate <= GETDATE()),
-	"Admin" int
-		constraint FK_GameChangeLog_PlayerAdmin REFERENCES Player(PlayerUnixID) not null
+	AdminID int not null
+		Constraint FK_GameChangeLog_Admin foreign key
+			references Admin(AdminID)
 )
 GO
 
@@ -25,7 +26,7 @@ create nonclustered index IX_GameChangeLog_GameID
 	ON "GameChangeLog" (GameID)
 GO
 create nonclustered index IX_GameChangeLog_Admin
-	ON "GameChangeLog" ("Admin")
+	ON "GameChangeLog" (AdminID)
 GO
 
 create trigger TR_GameChangeLog_PreventPKUpdate

@@ -8,15 +8,19 @@
 	NewCharacterName varchar(50) null,
 	ChangeDate DateTime not null
 		Constraint CK_CharacterChangeLog_ChangeDate Check (ChangeDate <= getdate()),
-	"Admin" int not null
-		Constraint FK_CharacterChangeLog_PlayerAdmin Foreign Key
-			References Player(PlayerUnixID)
+	AdminID int not null
+		Constraint FK_CharacterChangeLog_Admin foreign key 
+			references Admin(AdminID)
 )
 GO
 
 Create Nonclustered Index IX_CharacterChangeLog_CharacterID
 	On CharacterChangeLog(CharacterID)
 GO
+
+create nonclustered index IX_CharacterChangeLog_AdminID
+	on CharacterChangeLog(AdminID)
+Go
 
 create trigger TR_CharacterChangeLog_PreventPKUpdate
 	on "CharacterChangeLog"

@@ -21,6 +21,8 @@
 	CreationDate DateTime not null
 		Constraint DF_Player_CreationDate Default GetDate()
 		Constraint CK_Player_CreationDate Check (CreationDate <= GetDate()),
+	IsAdmin bit not null,
+		constraint DF_PlayerChangeLog_IsAdmin Default 0
 )
 GO
 

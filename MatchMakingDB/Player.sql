@@ -21,21 +21,21 @@
 	CreationDate DateTime not null
 		Constraint DF_Player_CreationDate Default GetDate()
 		Constraint CK_Player_CreationDate Check (CreationDate <= GetDate()),
-	IsAdmin bit not null,
-		constraint DF_PlayerChangeLog_IsAdmin Default 0
+	IsAdmin bit not null
+		constraint DF_Player_IsAdmin Default 0
 )
 GO
 
-create trigger TR_Player_PreventPKUpdate
+Create trigger TR_Player_PreventPKUpdate
 	on "Player"
-	For update
-	As
-		Begin
-			if @@ROWCOUNT > 0 and (Update(PlayerUnixID))
-					Begin
+	for update
+	as
+		begin
+			if @@rowcount > 0 and (Update(PlayerUnixID))
+					begin
 						rollback transaction
-							raiserror('Cannot change or update UnixID of a player',16,1)
-					End
-				End
-	Return
-GO
+							raiserror('cannot change or update unixid of a player',16,1)
+					end
+				end
+	return
+go

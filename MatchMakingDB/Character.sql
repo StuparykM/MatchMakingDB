@@ -36,7 +36,7 @@ as
 	begin
 	if @@ROWCOUNT > 0 and Update(CharacterName)
 		begin
-			insert into CharacterChangeLog (CharacterID, NewCharacterName, OldCharacterName, ChangeDate, "Admin")
+			insert into CharacterChangeLog (CharacterID, NewCharacterName, OldCharacterName, ChangeDate, AdminID)
 			select deleted.CharacterID,
 				   deleted.CharacterName as OldCharacterName,
 				   inserted.CharacterName as NewCharacterName,

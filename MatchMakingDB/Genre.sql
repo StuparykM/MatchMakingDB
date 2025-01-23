@@ -28,7 +28,7 @@ as
 begin
 	if @@ROWCOUNT > 0 and update(Description)
 		begin
-			insert into GenreChangeLog(GenreID, OldDescription, NewDescription, ChangeDate, "Admin")
+			insert into GenreChangeLog(GenreID, OldDescription, NewDescription, ChangeDate, AdminID)
 			select deleted.GenreID,
 				   deleted."Description" as OldDescription,
 				   inserted."Description" as NewDescription,

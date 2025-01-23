@@ -57,7 +57,7 @@ as
 begin
 	if update("Name") or update("Primary")
 	begin
-	insert into AliasChangeLog(AliasID, OldName, "NewName", "Primary", ChangeDate, "Admin")
+	insert into AliasChangeLog(AliasID, OldName, "NewName", "Primary", ChangeDate, AdminID)
 	select deleted.AliasID,
 		   deleted."Name" as OldName,
 		   inserted."Name" as "NewName",

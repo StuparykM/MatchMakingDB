@@ -36,7 +36,7 @@ as
 begin
 	if update("Name") or update("Version")
 		begin
-			insert into GameChangeLog (GameID, "NewName", OldName, NewVersion, OldVersion, ChangeDate, "Admin")
+			insert into GameChangeLog (GameID, "NewName", OldName, NewVersion, OldVersion, ChangeDate, AdminID)
 			select deleted.GameID,
 				   deleted."Name" as OldName,
 				   inserted."Name" as "NewName",

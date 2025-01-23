@@ -30,7 +30,7 @@ for Update
 as
 	begin
 		if update("Type") or update(Multiplier)
-			insert into MatchTypeChangeLog(MatchTypeID, OldType, NewType, OldMultiplier, NewMultiplier, ChangeDate, "Admin")
+			insert into MatchTypeChangeLog(MatchTypeID, OldType, NewType, OldMultiplier, NewMultiplier, ChangeDate, AdminID)
 			select deleted.MatchTypeID,
 				   deleted."Type" as OldType,
 				   inserted."Type" as NewType,

@@ -21,7 +21,7 @@
 	"Date" DateTime
 		constraint CK_Match_Date CHECK ("Date" <= GETDATE()) not null,
 	"Admin" int
-		constraint FK_Match_PlayerAdmin REFERENCES Player(PlayerUnixID) null
+		constraint FK_Match_PlayerAdmin REFERENCES Admin(AdminID) null
 )
 GO
 
@@ -88,7 +88,7 @@ for update
 as
 begin
 	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date") or update("Admin")
-	insert into MatchChangeLog(MatchID, GameID, NewPlayerOne, OldPlayerOne, NewPlayerTwo, OldPlayerTwo, NewWinner, OldWinner, NewCharacterOne, OldCharacterOne, NewCharacterTwo, OldCharacterTwo, NewVerifiedMatchURL, OldVerifiedMatchURL, NewDate, OldDate, ChangeDate, "Admin")
+	insert into MatchChangeLog(MatchID, GameID, NewPlayerOne, OldPlayerOne, NewPlayerTwo, OldPlayerTwo, NewWinner, OldWinner, NewCharacterOne, OldCharacterOne, NewCharacterTwo, OldCharacterTwo, NewVerifiedMatchURL, OldVerifiedMatchURL, NewDate, OldDate, ChangeDate, AdminID)
 	select deleted.MatchID,
 		   deleted.GameID,
 		   deleted.PlayerOne as OldPlayerOne,

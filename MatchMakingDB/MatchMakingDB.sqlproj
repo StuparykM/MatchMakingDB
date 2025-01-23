@@ -58,7 +58,6 @@
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Player.sql" />
     <Build Include="Alias.sql" />
     <Build Include="Media.sql" />
     <Build Include="Genre.sql" />
@@ -77,5 +76,6 @@
     <Build Include="PlayerChangeLog.sql" />
     <Build Include="Admin.sql" />
     <Build Include="AdminChangeLog.sql" />
+    <Build Include="Player.sql" />
   </ItemGroup>
 </Project>

@@ -5,8 +5,6 @@
 	PlayerUnixID int not null
 		Constraint FK_Admin_Player Foreign Key
 			References [dbo].[Player](PlayerUnixID),
-	Active bit not null
-		constraint DF_Admin_Active default 1,
 	CreationDate DateTime not null
 		Constraint DF_Admin_CreationDate Default GetDate()
 		Constraint CK_Admin_CreationDate Check (CreationDate <= GetDate())

@@ -39,3 +39,24 @@ Create trigger TR_Player_PreventPKUpdate
 				end
 	return
 go
+
+create trigger TR_Player_InsertIntoAdmin
+on Player
+for insert, update
+as
+	begin
+		insert into "Admin"(PlayerUnixID, CreationDate)
+		select inserted.PlayerUnixID,
+			   GetDate() as CreationDate
+		from inserted
+		inner join Player
+		on inserted.PlayerUnixID = Player.PlayerUnixID
+		where Player.IsAdmin = 1
+	if @@ERROR <> 0
+		begin
+			rollback transaction
+			raiserror('Insert or update failed',16,1)
+		end
+	end
+return
+GO

@@ -2,8 +2,8 @@
 (
 	ID int identity(1,1)
 		constraint PK_PlayerChangeLog primary key clustered not null,
-	UnixID int
-		constraint FK_PlayerChangeLog_UnixID references Player(PlayerUnixID) not null,
+	PlayerUnixID int
+		constraint FK_PlayerChangeLog_PlayerUnixID references Player(PlayerUnixID) not null,
 	OldFirstName varchar(50) null
 		Constraint CK_PlayerChangeLog_OldFirstName Check (OldFirstName like Trim(OldFirstName)),
 	NewFirstName varchar(50) null
@@ -14,6 +14,10 @@
 		Constraint CK_PlayerChangeLog_NewLastName Check (NewLastName like Trim(NewLastName)),
 	OldFullName As OldFirstName + ' ' + OldLastName,
 	NewFullName As NewFirstName + ' ' + NewLastName,
+	OldRegion varchar(2) not null
+		Constraint CK_PlayerChangeLog_OldRegion Check (OldRegion LIKE '[A-Z][A-Z]'),
+	NewRegion varchar(2) not null
+		Constraint CK_PlayerChangeLog_NewRegion Check (NewRegion LIKE '[A-Z][A-Z]'),
 	OldWins int null
 		Constraint DF_PlayerChangeLog_OldWins Default 0
 		Constraint CK_PlayerChangeLog_OldWins Check (OldWins >= 0),
@@ -32,9 +36,12 @@
 	NewRankingScore int null
 		Constraint DF_PlayerChangeLog_NewRankingScore Default 1000
 		Constraint CK_PlayerChangeLog_NewRankingScore Check (NewRankingScore >= 0),
-	CreationDate DateTime null
-		Constraint DF_PlayerChangeLog_CreationDate Default GetDate()
-		Constraint CK_PlayerChangeLog_CreationDate Check (CreationDate <= GetDate()),
+	NewCreationDate DateTime null
+		Constraint DF_PlayerChangeLog_NewCreationDate Default GetDate()
+		Constraint CK_PlayerChangeLog_NewCreationDate Check (NewCreationDate <= GetDate()),
+	OldCreationDate DateTime null
+		Constraint DF_PlayerChangeLog_OldCreationDate Default GetDate()
+		Constraint CK_PlayerChangeLog_OldCreationDate Check (OldCreationDate <= GetDate()),
 	ChangeDate datetime not null,
 	AdminID int null
 		Constraint FK_PlayerChangeLog_AdminID foreign key 

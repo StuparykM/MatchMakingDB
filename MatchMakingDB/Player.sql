@@ -60,3 +60,42 @@ as
 	end
 return
 GO
+
+create trigger TR_PlayerChangeLog_Update
+on Player
+for update
+as
+begin
+	if update(FirstName) or update(LastName) or update(FullName) or update(Region) or update(Wins) or update(Losses) or update(RankingScore) or update(CreationDate) or update(IsAdmin)
+		insert into PlayerChangeLog(PlayerUnixID, OldFirstName, NewFirstName, OldLastName, NewFirstName, OldFullName, NewFullName, OldRegion, NewRegion, OldWins, NewWins, OldLosses, NewLosses, OldRankingScore, NewRankingScore, NewCreationDate, OldCreationDate, ChangeDate, AdminID)
+			select deleted.PlayerUnixID,
+				   deleted.FirstName as OldFirstName,
+				   inserted.FirstName as NewFirstName,
+				   deleted.LastName as OldLastName,
+				   inserted.LastName as NewLastName,
+				   deleted.FirstName + ' ' + deleted.LastName as OldFullName,
+				   inserted.FirstName + ' ' + inserted.LastName as NewFullName,
+				   deleted.Region as OldRegion,
+				   inserted.Region as NewRegion,
+				   deleted.Wins as OldWins,
+				   inserted.Wins as NewWins,
+				   deleted.Losses as OldLosses,
+				   inserted.Losses as NewLosses,
+				   deleted.RankingScore as OldRankingScore,
+				   inserted.RankingScore as NewRankingScore,
+				   deleted.CreationDate as OldCreationDate,
+				   inserted.CreationDate as NewCreationDate,
+				   GetDate() as ChangeDate,
+				   Admin.AdminID as AdminID
+				   from inserted
+				   inner join deleted
+				   on inserted.PlayerUnixID = deleted.PlayerUnixID
+				   left join Admin
+				   on deleted.PlayerUnixID = Admin.PlayerUnixID --this needs to be tested
+				if @@ERROR <> 0 
+					begin
+					rollback transaction
+					raiserror('Update Failed',16,1)
+					end
+				end
+		return

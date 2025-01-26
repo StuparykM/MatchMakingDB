@@ -63,7 +63,7 @@ begin
 		   inserted."Name" as "NewName",
 		   inserted."Primary",
 		   GetDate() as ChangeDate,
-		   inserted.PlayerUnixID as "Admin"
+		   --inserted.PlayerUnixID as "Admin"
 		   from inserted
 		   inner join deleted
 		   on inserted.AliasID = deleted.AliasID

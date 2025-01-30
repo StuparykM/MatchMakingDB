@@ -63,10 +63,12 @@ begin
 		   inserted."Name" as "NewName",
 		   inserted."Primary",
 		   GetDate() as ChangeDate,
-		   --inserted.PlayerUnixID as "Admin"
+		   Admin.AdminID as AdminID
 		   from inserted
 		   inner join deleted
 		   on inserted.AliasID = deleted.AliasID
+		   left join Admin
+		   on inserted.PlayerUnixID = Admin.PlayerUnixID
 		if @@ERROR <> 0 
 			begin
 			rollback transaction

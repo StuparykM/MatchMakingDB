@@ -91,7 +91,7 @@ begin
 				   inner join deleted
 				   on inserted.PlayerUnixID = deleted.PlayerUnixID
 				   left join Admin
-				   on deleted.PlayerUnixID = Admin.PlayerUnixID --this needs to be tested
+				   on inserted.PlayerUnixID = Admin.PlayerUnixID
 				if @@ERROR <> 0 
 					begin
 					rollback transaction

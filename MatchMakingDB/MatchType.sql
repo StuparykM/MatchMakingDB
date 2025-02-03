@@ -37,7 +37,7 @@ as
 				   deleted.Multiplier as OldMultiplier,
 				   inserted.Multiplier as NewMultiplier,
 				   GetDate() as ChangeDate,
-				   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
+				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
 				   from deleted
 				   inner join inserted
 				   on deleted.MatchTypeID = inserted.MatchTypeID 

@@ -43,7 +43,7 @@ begin
 				   inserted."Version" as NewVersion,
 				   deleted."Version" as OldVersion,
 				   GetDate() as ChangeDate,
-				   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
+				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
 				   from inserted
 				   inner join deleted
 				   on inserted.GameID = deleted.GameID

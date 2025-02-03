@@ -32,8 +32,8 @@ begin
 			select deleted.GenreID,
 				   deleted."Description" as OldDescription,
 				   inserted."Description" as NewDescription,
-				   GetDate() as ChangeDate
-				   --inserted."Admin"
+				   GetDate() as ChangeDate,
+				   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
 				   from deleted
 				   inner join inserted
 				   on deleted.GenreID = inserted.GenreID

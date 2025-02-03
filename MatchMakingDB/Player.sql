@@ -61,6 +61,25 @@ as
 return
 GO
 
+create trigger TR_PlayerChangeLog_AdminCheck
+on Player
+for update
+as
+begin
+	if update(FirstName) or update(LastName) or update(FullName) or update(Region) or update(Wins) or update(Losses) or update(RankingScore) or update(CreationDate) or update(IsAdmin)
+	select *
+	from Player
+	where PlayerUnixID = USER_ID()/*this function will need to be updated, USER_ID is depreciating in the future*/ and IsAdmin = 1
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
+
+
 create trigger TR_PlayerChangeLog_Update
 on Player
 for update

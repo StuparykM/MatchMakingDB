@@ -105,8 +105,8 @@ begin
 		   inserted.VerifiedMatchURL as NewVerifiedMatchURL,
 		   deleted."Date" as OldDate,
 		   inserted."Date" as NewDate,
-		   GetDate() as ChangeDate
-		   --inserted."Admin"
+		   GetDate() as ChangeDate,
+		   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
 		   from deleted
 		   inner join inserted
 		   on deleted.MatchID = inserted.MatchID

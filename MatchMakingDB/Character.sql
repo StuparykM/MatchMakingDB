@@ -40,8 +40,8 @@ as
 			select deleted.CharacterID,
 				   deleted.CharacterName as OldCharacterName,
 				   inserted.CharacterName as NewCharacterName,
-				   GetDate() as ChangeDate
-				   --inserted.UnixID as "Admin"
+				   GetDate() as ChangeDate,
+				   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
 				from inserted
 				inner join deleted
 				on inserted.CharacterID = deleted.CharacterID

@@ -36,11 +36,11 @@ as
 				   inserted."Type" as NewType,
 				   deleted.Multiplier as OldMultiplier,
 				   inserted.Multiplier as NewMultiplier,
-				   GetDate() as ChangeDate
-				   --inserted."Admin"
+				   GetDate() as ChangeDate,
+				   (select AdminID from "Admin" where AdminID = USER_ID()) as AdminID
 				   from deleted
 				   inner join inserted
-				   on deleted.MatchTypeID = inserted.MatchTypeID
+				   on deleted.MatchTypeID = inserted.MatchTypeID 
 				if @@ERROR <> 0 
 					begin
 						rollback transaction

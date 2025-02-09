@@ -36,6 +36,8 @@ as
 begin
 	if update("Name") or update("Version")
 		begin
+		declare @PlayerUnixID int;
+		set @PlayerUnixID = Admin.PlayerUnixID
 			insert into GameChangeLog (GameID, "NewName", OldName, NewVersion, OldVersion, ChangeDate, AdminID)
 			select deleted.GameID,
 				   deleted."Name" as OldName,
@@ -43,7 +45,7 @@ begin
 				   inserted."Version" as NewVersion,
 				   deleted."Version" as OldVersion,
 				   GetDate() as ChangeDate,
-				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
+				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID(@PlayerUnixID)) as AdminID
 				   from inserted
 				   inner join deleted
 				   on inserted.GameID = deleted.GameID

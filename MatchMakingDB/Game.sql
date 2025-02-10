@@ -29,6 +29,25 @@ create trigger TR_Game_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_GameChangeLog_AdminCheck
+on Game
+for update
+as
+begin
+	DECLARE @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID;
+	if update("Name") or update("Version")
+	select *
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
 create trigger TR_GameChangeLog_Update
 on Game
 for update
@@ -45,7 +64,7 @@ begin
 				   inserted."Version" as NewVersion,
 				   deleted."Version" as OldVersion,
 				   GetDate() as ChangeDate,
-				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID(@PlayerUnixID)) as AdminID
+				   @PlayerUnixID as AdminID
 				   from inserted
 				   inner join deleted
 				   on inserted.GameID = deleted.GameID

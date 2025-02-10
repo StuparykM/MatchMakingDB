@@ -70,8 +70,8 @@ begin
 	set @PlayerUnixID = Admin.PlayerUnixID;
 	if update(FirstName) or update(LastName) or update(FullName) or update(Region) or update(Wins) or update(Losses) or update(RankingScore) or update(CreationDate) or update(IsAdmin)
 	select *
-	from Player
-	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ and IsAdmin = 1
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
 if @@ERROR <> 0 
 	begin
 	rollback transaction

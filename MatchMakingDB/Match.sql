@@ -87,6 +87,8 @@ on "Match"
 for update
 as
 begin
+declare @PlayerUnixID int;
+set @PlayerUnixID = Admin.PlayerUnixID
 	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date") or update("Admin")
 	insert into MatchChangeLog(MatchID, GameID, NewPlayerOne, OldPlayerOne, NewPlayerTwo, OldPlayerTwo, NewWinner, OldWinner, NewCharacterOne, OldCharacterOne, NewCharacterTwo, OldCharacterTwo, NewVerifiedMatchURL, OldVerifiedMatchURL, NewDate, OldDate, ChangeDate, AdminID)
 	select deleted.MatchID,

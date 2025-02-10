@@ -29,6 +29,26 @@ create trigger TR_Character_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_CharacterChangeLog_AdminCheck
+on Character
+for update
+as
+begin
+	DECLARE @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID;
+	if update(CharacterName)
+	select *
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
+
 create trigger TR_CharacterChangeLog_Update
 on "Character"
 for update
@@ -36,12 +56,14 @@ as
 	begin
 	if @@ROWCOUNT > 0 and Update(CharacterName)
 		begin
+		declare @PlayerUnixID int;
+		set @PlayerUnixID = Admin.PlayerUnixID
 			insert into CharacterChangeLog (CharacterID, NewCharacterName, OldCharacterName, ChangeDate, AdminID)
 			select deleted.CharacterID,
 				   deleted.CharacterName as OldCharacterName,
 				   inserted.CharacterName as NewCharacterName,
 				   GetDate() as ChangeDate,
-				   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
+				   @PlayerUnixID as AdminID
 				from inserted
 				inner join deleted
 				on inserted.CharacterID = deleted.CharacterID

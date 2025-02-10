@@ -50,6 +50,27 @@ create trigger TR_Alias_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_AliasChangeLog_AdminCheck
+on Alias
+for update
+as
+begin
+	DECLARE @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID;
+	if update("Name") or update("Primary")
+	select *
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
+
+
 create trigger TR_AliashChangeLog_Update
 on Alias
 for update
@@ -57,18 +78,18 @@ as
 begin
 	if update("Name") or update("Primary")
 	begin
+	declare @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID
 	insert into AliasChangeLog(AliasID, OldName, "NewName", "Primary", ChangeDate, AdminID)
 	select deleted.AliasID,
 		   deleted."Name" as OldName,
 		   inserted."Name" as "NewName",
 		   inserted."Primary",
 		   GetDate() as ChangeDate,
-		   Admin.AdminID as AdminID
+		   @PlayerUnixID as AdminID
 		   from inserted
 		   inner join deleted
 		   on inserted.AliasID = deleted.AliasID
-		   left join Admin
-		   on inserted.PlayerUnixID = Admin.PlayerUnixID -- needs testing
 		if @@ERROR <> 0 
 			begin
 			rollback transaction

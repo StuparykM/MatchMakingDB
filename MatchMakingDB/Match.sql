@@ -20,8 +20,6 @@
 		constraint FK_Match_MatchType REFERENCES MatchType(MatchTypeID) not null,
 	"Date" DateTime
 		constraint CK_Match_Date CHECK ("Date" <= GETDATE()) not null,
-	"Admin" int
-		constraint FK_Match_PlayerAdmin REFERENCES Admin(AdminID) null
 )
 GO
 
@@ -43,9 +41,7 @@ GO
 create nonclustered index IX_Match_MatchType
 	ON "Match" (MatchType)
 GO
-create nonclustered index IX_Match_PlayerAdmin
-	ON "Match" ("Admin")
-GO
+
 
 create trigger TR_PreventDuplicatePlayer
 	on "Match"
@@ -82,6 +78,25 @@ create trigger TR_Match_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_MatchChangeLog_AdminCheck
+on Match
+for update
+as
+begin
+	DECLARE @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID;
+	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date")
+	select *
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
 create trigger TR_MatchChangeLog_Update
 on "Match"
 for update
@@ -89,7 +104,7 @@ as
 begin
 declare @PlayerUnixID int;
 set @PlayerUnixID = Admin.PlayerUnixID
-	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date") or update("Admin")
+	if update(PlayerOne) or update(PlayerTwo) or update(Winner) or update(CharacterOne) or update(CharacterTwo) or update(VerifiedMatchURL) or update(MatchType) or update("Date")
 	insert into MatchChangeLog(MatchID, GameID, NewPlayerOne, OldPlayerOne, NewPlayerTwo, OldPlayerTwo, NewWinner, OldWinner, NewCharacterOne, OldCharacterOne, NewCharacterTwo, OldCharacterTwo, NewVerifiedMatchURL, OldVerifiedMatchURL, NewDate, OldDate, ChangeDate, AdminID)
 	select deleted.MatchID,
 		   deleted.GameID,
@@ -108,7 +123,7 @@ set @PlayerUnixID = Admin.PlayerUnixID
 		   deleted."Date" as OldDate,
 		   inserted."Date" as NewDate,
 		   GetDate() as ChangeDate,
-		   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
+		   @PlayerUnixID as AdminID
 		   from deleted
 		   inner join inserted
 		   on deleted.MatchID = inserted.MatchID

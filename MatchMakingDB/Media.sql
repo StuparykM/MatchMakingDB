@@ -28,11 +28,32 @@ create trigger TR_Media_PreventPKUpdate
 	Return
 GO
 
+create trigger TR_MediaChangeLog_AdminCheck
+on Media
+for update
+as
+begin
+	DECLARE @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID;
+	if update("Url")
+	select *
+	from Admin
+	where PlayerUnixID = USER_ID(@PlayerUnixID)/*this function will need to be updated, USER_ID is depreciating in the future*/ 
+if @@ERROR <> 0 
+	begin
+	rollback transaction
+	raiserror('Do not have permissions for update',16,1)
+	end
+end
+GO
+
 create trigger TR_MediaChangeLog_Update
 on Media
 for update
 as
 	begin
+	declare @PlayerUnixID int;
+	set @PlayerUnixID = Admin.PlayerUnixID
 		if @@ROWCOUNT > 0 and update("Url")
 		insert into MediaChangeLog(MediaID, PlayerUnixID, NewUrl, OldUrl, ChangeDate, AdminID)
 		select deleted.ID as MediaID,
@@ -40,7 +61,7 @@ as
 			   deleted."Url" as OldUrl,
 			   inserted."Url" as NewUrl,
 			   GetDate() as ChangeDate,
-			   (select PlayerUnixID from Player where IsAdmin = 1 and PlayerUnixID = USER_ID()) as AdminID
+			   @PlayerUnixID as AdminID
 			   from deleted
 			   inner join inserted
 			   on deleted.ID = inserted.ID

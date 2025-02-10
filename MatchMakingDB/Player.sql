@@ -87,6 +87,8 @@ on Player
 for update
 as
 begin
+declare @PlayerUnixID int;
+set @PlayerUnixID = Admin.PlayerUnixID
 	if update(FirstName) or update(LastName) or update(FullName) or update(Region) or update(Wins) or update(Losses) or update(RankingScore) or update(CreationDate) or update(IsAdmin)
 		insert into PlayerChangeLog(PlayerUnixID, OldFirstName, NewFirstName, OldLastName, NewFirstName, OldFullName, NewFullName, OldRegion, NewRegion, OldWins, NewWins, OldLosses, NewLosses, OldRankingScore, NewRankingScore, NewCreationDate, OldCreationDate, ChangeDate, AdminID)
 			select deleted.PlayerUnixID,
@@ -107,12 +109,10 @@ begin
 				   deleted.CreationDate as OldCreationDate,
 				   inserted.CreationDate as NewCreationDate,
 				   GetDate() as ChangeDate,
-				   Admin.AdminID as AdminID
+				   @PlayerUnixID as AdminID
 				   from inserted
 				   inner join deleted
 				   on inserted.PlayerUnixID = deleted.PlayerUnixID
-				   left join Admin
-				   on inserted.PlayerUnixID = Admin.PlayerUnixID
 				if @@ERROR <> 0 
 					begin
 					rollback transaction

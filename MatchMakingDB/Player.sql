@@ -26,6 +26,7 @@
 )
 GO
 
+
 Create trigger TR_Player_PreventPKUpdate
 	on "Player"
 	for update
@@ -120,3 +121,28 @@ set @PlayerUnixID = Admin.PlayerUnixID
 					end
 				end
 		return
+go
+
+create procedure PR_Player_InsertPlayerInfo
+(@FirstName varchar(50) = null, @LastName varchar(50) = null, @FullName varchar(100) = null, @Region varchar(2) = null, @Wins int = null, @Losses int = null, @RankingScore int = null, @CreationDate datetime = null, @IsAdmin bit = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+		IF @Region IS NULL
+				BEGIN
+					RAISERROR ('Player must be assigned to a valid region', 16,1);
+					ROLLBACK TRANSACTION
+					RETURN
+				END
+			INSERT INTO Player (FirstName, LastName, FullName, Region, Wins, Losses, RankingScore, CreationDate, IsAdmin)
+			VALUES (@FirstName, @LastName, @Fullname, @Region, @Wins, @Losses, @RankingScore, @CreationDate, @IsAdmin);
+			COMMIT TRANSACTION
+		END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState)
+		END CATCH
+GO

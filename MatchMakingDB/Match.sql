@@ -136,3 +136,50 @@ set @PlayerUnixID = Admin.PlayerUnixID
 	return
 go
 
+create procedure PR_Match_InsertMatchData
+(@PlayerOne int = null, @PlayerTwo int = null, @Winner int = null, @GameID int = null, @CharacterOne int = null, @CharacterTwo int = null, @VerifiedMatchURL varchar(100) = null, @MatchType int = null, @Date datetime = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+			IF @PlayerOne IS NULL OR @PlayerTwo IS NULL
+				BEGIN
+					RAISERROR ('Players cannot be null', 16, 1)
+					ROLLBACK TRANSACTION
+				END
+			IF @Winner IS NULL
+				BEGIN
+					RAISERROR('Winner cannot be null',16,1)
+					ROLLBACK TRANSACTION
+				END
+			IF @GameID IS NULL
+				BEGIN
+					RAISERROR('Game match is played in cannot be null',16,1)
+					ROLLBACK TRANSACTION
+				END
+			IF @CharacterOne IS NULL OR @CharacterTwo IS NULL
+				BEGIN
+					RAISERROR('Characters played cannot be null',16,1)
+					ROLLBACK TRANSACTION
+				END
+			IF @MatchType IS NULL
+				BEGIN 
+					RAISERROR('Match Type cannot be null',16,1)
+					ROLLBACK TRANSACTION
+				END
+			IF @Date IS NULL
+				BEGIN
+					RAISERROR('Date match was played cannot be null',16,1)
+					ROLLBACK TRANSACTION
+				END
+			INSERT INTO "Match" (PlayerOne, PlayerTwo, Winner, GameID, CharacterOne, CharacterTwo, VerifiedMatchURL, MatchType, "Date")
+			VALUES (@PlayerOne, @PlayerTwo, @Winner, @GameID, @CharacterOne, @CharacterTwo, @VerifiedMatchURL, @MatchType, @Date)
+			COMMIT TRANSACTION
+		END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

@@ -123,7 +123,7 @@ set @PlayerUnixID = Admin.PlayerUnixID
 		return
 go
 
-create procedure PR_Player_InsertPlayerInfo
+create procedure PR_Player_InsertPlayerData
 (@FirstName varchar(50) = null, @LastName varchar(50) = null, @FullName varchar(100) = null, @Region varchar(2) = null, @Wins int = null, @Losses int = null, @RankingScore int = null, @CreationDate datetime = null, @IsAdmin bit = null)
 AS
 	BEGIN TRY

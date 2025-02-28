@@ -98,5 +98,40 @@ begin
 		end
 	return
 end
+GO
 
- 
+create procedure Alias_InsertData
+(@PlayerUnixID int = null, @Name varchar(50) = null, @Primary bit = null)
+AS
+	BEGIN TRY
+	BEGIN TRANSACTION
+		IF @PlayerUnixID IS NULL
+			BEGIN
+				RAISERROR('Player Unix ID cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @Name IS NULL
+			BEGIN
+				RAISERROR('Alias Name cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @Primary IS NULL
+			BEGIN
+				RAISERROR('Primary Alias cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		INSERT INTO Alias (PlayerUnixID, "Name", "Primary")
+		VALUES (@PlayerUnixID, @Name, @Primary)
+		COMMIT TRANSACTION
+			END TRY
+			BEGIN CATCH
+				IF @@TRANCOUNT > 0
+					ROLLBACK TRANSACTION
+				DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+				SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+				RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

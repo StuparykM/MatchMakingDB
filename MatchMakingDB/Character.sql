@@ -76,3 +76,33 @@ as
 return
 end
 GO
+
+create procedure Character_InsertData
+(@GameID int = null, @CharacterName varchar(50) = null)
+AS
+	BEGIN TRY
+	BEGIN TRANSACTION
+		IF @GameID IS NULL
+			BEGIN
+				RAISERROR('GameID cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @CharacterName IS NULL
+			BEGIN
+				RAISERROR('Character Name cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		INSERT INTO "Character" (GameID, CharacterName)
+		VALUES (@GameID, @CharacterName)
+		COMMIT TRANSACTION
+			END TRY
+				BEGIN CATCH
+					IF @@TRANCOUNT > 0
+					ROLLBACK TRANSACTION
+						DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+						SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+						RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

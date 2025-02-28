@@ -77,3 +77,39 @@ begin
 		return
 end
 GO
+
+create procedure Game_InsertData
+(@Name varchar(50) = null, @GenreID int = null, @Version varchar(50) = null)
+AS
+	BEGIN TRY
+	BEGIN TRANSACTION
+		IF @Name is null 
+			BEGIN
+				RAISERROR('Name cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @GenreID IS NULL
+			BEGIN
+				RAISERROR('Genre ID cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @Version IS NULL
+			BEGIN
+				RAISERROR('Game version cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		INSERT INTO Game ("Name", GenreID, "Version")
+		VALUES (@Name, @GenreID, @Version)
+		COMMIT TRANSACTION
+			END TRY
+				BEGIN CATCH
+					IF @@TRANCOUNT > 0
+					ROLLBACK TRANSACTION
+						DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+						SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+						RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

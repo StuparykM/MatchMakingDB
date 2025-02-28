@@ -47,3 +47,27 @@ if @@ERROR <> 0
 	end
 end
 GO
+
+create procedure Admin_InsertData
+(@PlayerUnixID int = null, @CreationDate datetime = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+		IF @PlayerUnixID IS NULL
+			BEGIN
+				RAISERROR('Player Unix ID cannot be null',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		INSERT INTO "Admin" (PlayerUnixID, CreationDate)
+		VALUES (@PlayerUnixID, @CreationDate)
+		COMMIT TRANSACTION
+	END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

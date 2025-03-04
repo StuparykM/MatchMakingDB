@@ -70,3 +70,33 @@ as
 				end
 			return
 	GO
+
+create procedure MatchType_InsertData
+(@Type varchar(50) = null, @Multiplier decimal(1,1) = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+			IF @Type IS NULL
+				BEGIN
+					RAISERROR('Match Type cannot be null',16,1)
+					ROLLBACK TRANSACTION
+					RETURN
+				END
+			IF @Multiplier IS NULL
+				BEGIN
+					RAISERROR('Multiplier cannot be null',16,1)
+					ROLLBACK TRANSACTION
+					RETURN
+				END
+			INSERT INTO MatchType ("Type", Multiplier)
+			VALUES (@Type, @Multiplier)
+		COMMIT TRANSACTION
+		END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO

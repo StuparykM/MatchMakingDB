@@ -73,5 +73,35 @@ as
 			end
 		return
 	GO
+
+create procedure Media_InsertData
+(@PlayerUnixID int = null, @Url varchar(2048) = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+			IF @PlayerUnixID IS NULL
+				BEGIN
+					RAISERROR('Player Unix ID cannot be null',16,1)
+					ROLLBACK TRANSACTION
+					RETURN
+				END
+			IF @Url IS NULL
+				BEGIN
+					RAISERROR('Media Url cannot be null',16,1)
+					ROLLBACK TRANSACTION
+					RETURN
+				END
+			INSERT INTO Media (PlayerUnixID, "Url")
+			VALUES (@PlayerUnixID, @Url)
+		COMMIT TRANSACTION
+		END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO
 		
 	

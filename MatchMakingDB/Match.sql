@@ -136,7 +136,7 @@ set @PlayerUnixID = Admin.PlayerUnixID
 	return
 go
 
-create procedure PR_Match_InsertMatchData
+create procedure Match_InsertData
 (@PlayerOne int = null, @PlayerTwo int = null, @Winner int = null, @GameID int = null, @CharacterOne int = null, @CharacterTwo int = null, @VerifiedMatchURL varchar(100) = null, @MatchType int = null, @Date datetime = null)
 AS
 	BEGIN TRY

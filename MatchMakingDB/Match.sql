@@ -44,7 +44,7 @@ create nonclustered index IX_Match_MatchType
 GO
 
 
-create trigger TR_PreventDuplicatePlayer
+create trigger TR_Match_PreventDuplicatePlayer
 	on "Match"
 	For insert, update
 	As
@@ -177,7 +177,7 @@ AS
 			COMMIT TRANSACTION
 		END TRY
 		BEGIN CATCH
-			IF @@TRANCOUNT > 0
+			IF @@ERROR <> 0
 				ROLLBACK TRANSACTION
 			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
 			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
@@ -205,7 +205,7 @@ AS
 			COMMIT TRANSACTION
 		END TRY
 		BEGIN CATCH
-			IF @@TRANCOUNT > 0
+			IF @@ERROR <> 0
 				ROLLBACK TRANSACTION
 			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
 			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()

@@ -9,7 +9,7 @@
 	Winner int
 		constraint CK_Match_Winner CHECK (Winner BETWEEN 1 AND 2) not null,
 	GameID int
-		constraint FK_Match_Game REFERENCES Game(GameID) not null,
+		constraint FK_Match_Winner REFERENCES Player(PlayerUnixID) not null,
 	CharacterOne int
 		constraint FK_Match_CharacterOne REFERENCES "Character"(CharacterID) not null,
 	CharacterTwo int
@@ -20,6 +20,7 @@
 		constraint FK_Match_MatchType REFERENCES MatchType(MatchTypeID) not null,
 	"Date" DateTime
 		constraint CK_Match_Date CHECK ("Date" <= GETDATE()) not null,
+	"Status" bit not null
 )
 GO
 
@@ -173,6 +174,31 @@ AS
 				END
 			INSERT INTO "Match" (PlayerOne, PlayerTwo, Winner, GameID, CharacterOne, CharacterTwo, VerifiedMatchURL, MatchType, "Date")
 			VALUES (@PlayerOne, @PlayerTwo, @Winner, @GameID, @CharacterOne, @CharacterTwo, @VerifiedMatchURL, @MatchType, @Date)
+			COMMIT TRANSACTION
+		END TRY
+		BEGIN CATCH
+			IF @@TRANCOUNT > 0
+				ROLLBACK TRANSACTION
+			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
+			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
+			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
+		END CATCH
+GO
+
+create procedure CompleteMatch
+(@MatchID int = null, @WinnerID int = null)
+AS
+	BEGIN TRY
+		BEGIN TRANSACTION
+			UPDATE "Match"
+			SET "Status" = 1
+			WHERE MatchID = @MatchID
+				UPDATE Player
+				SET Wins = Wins + 1
+				WHERE PlayerUnixID = @WinnerID
+					UPDATE Player
+					SET Losses = Losses + 1
+					WHERE PlayerUnixID IN (SELECT PlayerUnixID FROM "Match" WHERE MatchID = @MatchID AND PlayerUnixID <> @WinnerID)
 			COMMIT TRANSACTION
 		END TRY
 		BEGIN CATCH

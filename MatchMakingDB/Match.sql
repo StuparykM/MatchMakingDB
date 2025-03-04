@@ -197,8 +197,11 @@ AS
 				SET Wins = Wins + 1
 				WHERE PlayerUnixID = @WinnerID
 					UPDATE Player
-					SET Losses = Losses + 1
-					WHERE PlayerUnixID IN (SELECT PlayerUnixID FROM "Match" WHERE MatchID = @MatchID AND PlayerUnixID <> @WinnerID)
+					SET RankingScore = RankingScore * (SELECT Multiplier FROM MatchType JOIN "Match" as M ON M.Winner = Player.PlayerUnixID WHERE M.MatchType = MatchType.MatchTypeID)
+					WHERE PlayerUnixID IN (SELECT Winner FROM "Match" WHERE Winner IS NOT NULL)
+						UPDATE Player
+						SET Losses = Losses + 1
+						WHERE PlayerUnixID IN (SELECT PlayerUnixID FROM "Match" WHERE MatchID = @MatchID AND PlayerUnixID <> @WinnerID)
 			COMMIT TRANSACTION
 		END TRY
 		BEGIN CATCH

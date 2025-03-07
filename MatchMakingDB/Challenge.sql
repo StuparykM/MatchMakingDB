@@ -8,5 +8,17 @@
 		Constraint FK_Challenge_Opponent references Player(PlayerUnixID),
 	ChallengeDate DateTime not null
 		constraint CK_Challenge_Date CHECK (ChallengeDate <= GETDATE()),
-	IsAccepted bit not null
+	"Status" varchar(50) not null
+		constraint DF_Challenge_DefaultState Default 'Pending'
 )
+GO
+
+create nonclustered index IX_Challenge_Challenger
+	ON Challenge(Challenger)
+GO
+
+create nonclustered index IX_Challenge_Opponent
+	ON Challenge(Opponent)
+GO
+
+

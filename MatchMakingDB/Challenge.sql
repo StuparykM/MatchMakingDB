@@ -119,3 +119,26 @@ AS
 						RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
 		END CATCH
 GO
+
+
+create procedure AcceptChallenge
+@ChallengeID int
+AS
+	IF NOT EXISTS (SELECT * from Challenge where ChallengeID = @ChallengeID and "Status" = 'Pending')
+		BEGIN
+			RAISERROR('Challenge does not exist or is still pending',16,1)
+			RETURN
+		END
+	ELSE
+	BEGIN
+		DECLARE @Challenger int, @Opponent int
+		SELECT @Challenger = Challenger, @Opponent = Opponent
+		FROM Challenge where ChallengeID = @ChallengeID
+	UPDATE Challenge
+	SET "Status" = 'Accepted'
+	WHERE ChallengeID = @ChallengeID
+INSERT INTO "Match" (PlayerOne, PlayerTwo)
+VALUES (@Challenger, @Opponent, 'Ongoing')
+END
+
+	

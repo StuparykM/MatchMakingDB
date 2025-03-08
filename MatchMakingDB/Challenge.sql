@@ -101,7 +101,7 @@ AS
 				ROLLBACK TRANSACTION
 				RETURN
 			END
-		IF EXISTS (SELECT * FROM "Match" WHERE PlayerOne = @Opponent or PlayerTwo = @Opponent AND "Status" = 'Pending')
+		IF EXISTS (SELECT * FROM "Match" WHERE PlayerOne = @Opponent or PlayerTwo = @Opponent AND "Status" = 'Ongoing')
 			BEGIN
 				RAISERROR('This player is already in a match',16,1)
 				ROLLBACK TRANSACTION

@@ -84,6 +84,29 @@ AS
 				ROLLBACK TRANSACTION
 				RETURN
 			END
+		IF NOT EXISTS (SELECT * FROM Player where PlayerUnixID = @Challenger)
+			BEGIN
+				RAISERROR('Challenger does not exist',16,1)
+				RETURN
+			END
+		IF NOT EXISTS (SELECT * FROM Player where PlayerUnixID = @Opponent)
+			BEGIN
+				RAISERROR('Opponent does not exist',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF @Challenger = @Opponent 
+			BEGIN
+				RAISERROR('Player cannot challenge themselves',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
+		IF EXISTS (SELECT * FROM "Match" WHERE PlayerOne = @Opponent or PlayerTwo = @Opponent AND "Status" = 'Pending')
+			BEGIN
+				RAISERROR('This player is already in a match',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
 		INSERT INTO Challenge (Challenger, Opponent, ChallengeDate, "Status")
 		VALUES (@Challenger, @Opponent, @ChallengeDate, @Status)
 		COMMIT TRANSACTION

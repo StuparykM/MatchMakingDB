@@ -147,6 +147,11 @@ AS
 					RAISERROR ('Players cannot be null', 16, 1)
 					ROLLBACK TRANSACTION
 				END
+			IF @PlayerOne = @PlayerTwo
+				BEGIN
+					RAISERROR ('Player one and Player Two cannot be the same',16,1)
+					ROLLBACK TRANSACTION
+				END
 			IF @Winner IS NULL
 				BEGIN
 					RAISERROR('Winner cannot be null',16,1)

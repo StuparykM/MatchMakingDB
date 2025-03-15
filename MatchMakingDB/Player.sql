@@ -134,7 +134,7 @@ AS
 					ROLLBACK TRANSACTION
 					RETURN
 				END
-		IF EXISTS (select * from Player where FirstName = @FirstName and LastName = @LastName)
+		IF EXISTS (select PlayerUnixID from Player )
 			BEGIN
 				RAISERROR ('Player already exists',16,1)
 				ROLLBACK TRANSACTION

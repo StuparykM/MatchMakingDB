@@ -134,6 +134,12 @@ AS
 					ROLLBACK TRANSACTION
 					RETURN
 				END
+		IF EXISTS (select * from Player where FirstName = @FirstName and LastName = @LastName)
+			BEGIN
+				RAISERROR ('Player already exists',16,1)
+				ROLLBACK TRANSACTION
+				RETURN
+			END
 			INSERT INTO Player (FirstName, LastName, FullName, Region, Wins, Losses, RankingScore, CreationDate, IsAdmin)
 			VALUES (@FirstName, @LastName, @Fullname, @Region, @Wins, @Losses, @RankingScore, @CreationDate, @IsAdmin);
 			COMMIT TRANSACTION

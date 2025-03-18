@@ -78,5 +78,6 @@
     <Build Include="AdminChangeLog.sql" />
     <Build Include="Player.sql" />
     <Build Include="Challenge.sql" />
+    <Build Include="ChallengeChangeLog.sql" />
   </ItemGroup>
 </Project>

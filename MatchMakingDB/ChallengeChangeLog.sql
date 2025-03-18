@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[ChallengeChangeLog]
 (
-	ChallengeChangeID int identity (1,1) constraint PK_ChallengeChangeLog_ChallengeChangeID primary key clustered not null,
+	ChallengeChangeID int identity (1,1)
+		constraint PK_ChallengeChangeLog_ChallengeChangeID primary key clustered not null,
 	OldChallenger int null
 		constraint FK_ChallengeChangeLog_OldChallenger references Player(PlayerUnixID),
 	NewChallenger int null

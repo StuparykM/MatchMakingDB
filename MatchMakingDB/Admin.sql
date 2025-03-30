@@ -25,7 +25,7 @@ create trigger TR_Admin_PreventPKUpdate
 						rollback transaction
 							raiserror('Cannot change or update Admin ID',16,1)
 					End
-				End
+			End
 	Return
 GO
 
@@ -69,5 +69,5 @@ AS
 			DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT, @ErrorLine INT
 			SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE(), @ErrorLine = ERROR_LINE()
 			RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState, @ErrorLine)
-		END CATCH
+	END CATCH
 GO

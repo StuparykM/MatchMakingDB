@@ -20,7 +20,8 @@
 		constraint FK_Match_MatchType REFERENCES MatchType(MatchTypeID) not null,
 	"Date" DateTime
 		constraint CK_Match_Date CHECK ("Date" <= GETDATE()) not null,
-	"Status" bit not null
+	"Status" varchar(50) not null
+	constraint DF_Match_MatchStatus DEFAULT 'Pending'
 )
 GO
 
@@ -196,7 +197,7 @@ AS
 	BEGIN TRY
 		BEGIN TRANSACTION
 			UPDATE "Match"
-			SET "Status" = 1
+			SET "Status" = 'Completed'
 			WHERE MatchID = @MatchID
 				UPDATE Player
 				SET Wins = Wins + 1

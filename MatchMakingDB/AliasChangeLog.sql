@@ -24,16 +24,16 @@ Create Nonclustered Index IX_AliasChangeLog_Admin
 	On AliasChangeLog(AdminID)
 GO
 
---create trigger TR_AliasChangeLog_PreventPKUpdate
---	on AliaschangeLog
---	For update
---	As
---		Begin
---			if @@ROWCOUNT > 0 and (Update(ID))
---					Begin
---						rollback transaction
---							raiserror('Cannot change Log ID',16,1)
---					End
---				End
---	Return
---GO
+create trigger TR_AliasChangeLog_PreventPKUpdate
+	on AliaschangeLog
+	For update
+	As
+		Begin
+			if @@ROWCOUNT > 0 and (Update(ID))
+					Begin
+						rollback transaction
+							raiserror('Cannot change Log ID',16,1)
+					End
+				End
+	Return
+GO

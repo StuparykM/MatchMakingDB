@@ -163,6 +163,36 @@ END
 GO
 
 
-
+create trigger TR_ChallengeChangeLog_Update
+on "Challenge"
+for update
+as
+	begin
+	declare @PlayerUnixID int
+		set @PlayerUnixID = Admin.PlayerUnixID
+	IF  update (Challenger) or update (Opponent) or update (ChallengeDate)
+		begin
+			insert into ChallengeChangeLog (ChallengeID, OldChallenger, NewChallenger, OldOpponent, NewOpponent, OldChallengeDate, NewChallengeDate, OldStatus, NewStatus, ChangeDate, AdminID)
+			select deleted.ChallengeID,
+				   deleted.Challenger as OldChallenger,
+				   inserted.Challenger as NewChallenger,
+				   deleted.Opponent as OldOpponent,
+				   inserted.Opponent as NewOpponent,
+				   deleted.ChallengeDate as OldChallengeDate,
+				   inserted.ChallengeDate as NewChallengeDate,
+				   GetDate() as ChangeDate,
+				   @PlayerUnixID as AdminID
+				   from deleted
+				   inner join inserted
+				   on deleted.ChallengeID = inserted.ChallengeID
+				if @@ERROR <> 0
+					begin
+						rollback transaction
+						raiserror ('Update Failed', 16,1)
+					end
+				end
+			end
+		return
+	go
 
 	

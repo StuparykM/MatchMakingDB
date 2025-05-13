@@ -172,7 +172,7 @@ as
 		set @PlayerUnixID = Admin.PlayerUnixID
 	IF  update (Challenger) or update (Opponent) or update (ChallengeDate)
 		begin
-			insert into ChallengeChangeLog (ChallengeID, OldChallenger, NewChallenger, OldOpponent, NewOpponent, OldChallengeDate, NewChallengeDate, OldStatus, NewStatus, ChangeDate, AdminID)
+			insert into ChallengeChangeLog (ChallengeID, OldChallenger, NewChallenger, OldOpponent, NewOpponent, OldChallengeDate, NewChallengeDate, /*OldStatus, NewStatus,*/ ChangeDate, AdminID)
 			select deleted.ChallengeID,
 				   deleted.Challenger as OldChallenger,
 				   inserted.Challenger as NewChallenger,

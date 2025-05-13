@@ -16,10 +16,10 @@
 		constraint CK_ChallengeChangeLog_OldChangeDate CHECK (OldChallengeDate <= GETDATE()),
 	NewChallengeDate datetime null
 		constraint CK_ChallengeChangeLog_NewChangeDate CHECK (NewChallengeDate <= GETDATE()),
-	OldStatus varchar(50) null
-		constraint DF_ChallengeChangeLog_OldDefaultState Default 'Pending',
-	NewStatus varchar(50) null
-		constraint DF_ChallengeChangeLog_NewDefaultState Default 'Pending',
+	--OldStatus varchar(50) null
+	--	constraint DF_ChallengeChangeLog_OldDefaultState Default 'Pending',
+	--NewStatus varchar(50) null
+	--	constraint DF_ChallengeChangeLog_NewDefaultState Default 'Pending',
 	ChangeDate datetime not null
 		constraint CK_ChallengeChangeLog_ChangeDate CHECK (ChangeDate <- GETDATE()),
 	AdminID int not null
